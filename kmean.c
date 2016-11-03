@@ -99,6 +99,8 @@ int main(int argc, char* argv[]) {
     centers[i].red = rand() % (maxval + 1);
     centers[i].green = rand() % (maxval + 1);
     centers[i].blue = rand() % (maxval + 1);
+    centers[i].x = rand() % rows;
+    centers[i].y = rand() % cols;
   }
 
   /* Reading */
@@ -136,7 +138,7 @@ int main(int argc, char* argv[]) {
 
     //Find the new center
     for (i=0; i< num_clusters ; i++){
-      int red = 0, blue = 0, green = 0;
+      int red = 0, blue = 0, green = 0, x = 0, y = 0;
       pixel_t mean;
 
       for(j=0; j< cluster_size[i];j++) {
@@ -148,10 +150,14 @@ int main(int argc, char* argv[]) {
       red /= cluster_size[i];
       blue /= cluster_size[i];
       green /= cluster_size[i];
+      x /= cluster_size[i];
+      y /= cluster_size[i];
 
       mean.red = red;
       mean.blue = blue;
       mean.green = green;
+      mean.x = x;
+      mean.y = y;
 
       centers[i]=mean;
     }
