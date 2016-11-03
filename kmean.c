@@ -109,52 +109,43 @@ int main(int argc, char* argv[]) {
     }
   }
 
-
-
-
-for (int z=0;z<10;z++)
-{
-
-for(i=0;i<num_clusters;i++)
+  // repeat k-means for several times
+  int times = 10;
+  for (int z=0;z<times;z++) {
+    for(i=0;i<num_clusters;i++)
     cluster_size[i]=0;
 
-  // Assing point to cluster
+    // Assign point to cluster
+    for(i= 0;i < rows* cols;i++){
+      int id= assign_cluster(pixels[i],centers, num_clusters);
+      int current_size=cluster_size[id];
+      clusters[id][current_size] = pixels[i];
+      cluster_size[id]++;
+    }
 
-for(i= 0;i < rows* cols;i++){
+    //Find the new center
+    for (i=0; i< num_clusters ; i++){
+      int red,blue,green;
+      pixel_t mean;
 
- int id= assign_cluster(pixels[i],centers, num_clusters);
- int current_size=cluster_size[id];
- clusters[id][current_size] = pixels[i];
- cluster_size[id]++;
+      for(j=0; j< cluster_size[i];j++) {
+        red+= clusters[i][j].red;
+        blue+= clusters[i][j].blue;
+        green+= clusters[i][j].green;
+      }
 
-}
+      red /= cluster_size[i];
+      blue /= cluster_size[i];
+      green /= cluster_size[i];
 
-//Find the new center
+      mean.red = red;
+      mean.blue = blue;
+      mean.green = green;
 
-for (i=0; i< num_clusters ; i++){
-  int red,blue,green;
-  pixel_t mean;
+      centers[i]=mean;
+    }
+  }
 
-for(j=0; j< cluster_size[i];j++)
-{
-  red+= clusters[i][j].red;
-  blue+= clusters[i][j].blue;
-  green+= clusters[i][j].green;
-}
-
-red /= cluster_size[i];
-blue /= cluster_size[i];
-green /= cluster_size[i];
-
-  mean.red = red;
-  mean.blue = blue;
-  mean.green = green;
-
-  centers[i]=mean;
-}
-
-
-}
   for (i = 0; i < num_clusters; i++) {
     for (j = 0; j < cluster_size[i]; j++) {
       int x = clusters[i][j].x;
