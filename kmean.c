@@ -6,16 +6,35 @@
 
 
 int main(int argc, char* argv[]) {
-  FILE* ifp, *ofp_gray;
+  FILE* ifp;
   pixel_t *pixels;
   int ich1, ich2, rows, cols, bitcols, maxval=255, is_raw;
+  int num_clusters;
   int i, j;
 
   /* Arguments */
-  if ( argc != 2 ){
+  if ( argc != 3 ){
     printf("\nUsage: %s file \n\n", argv[0]);
     exit(0);
   }
+
+  // num_clusters = atoi(argv[2]);
+  num_clusters = 3;
+  pixel_t *centers = malloc(num_clusters * sizeof(pixel_t));
+  pixel_t **clusters;
+
+  // hand-picked centers
+  centers[0].red = 255;
+  centers[0].green = 105;
+  centers[0].blue = 208;
+
+  centers[1].red = 211;
+  centers[1].green = 219;
+  centers[1].blue = 22;
+
+  centers[2].red = 0;
+  centers[2].green = 0;
+  centers[2].blue = 0;
 
   /* Opening */
   ifp = fopen(argv[1],"r");
@@ -46,6 +65,10 @@ int main(int argc, char* argv[]) {
 
   /* Memory allocation  */
   pixels = malloc(cols * rows * sizeof(pixel_t));
+  clusters = malloc(num_clusters * sizeof(pixel_t *));
+  for (i = 0; i < num_clusters; i++) {
+    clusters[i] = malloc(rows * cols * sizeof(pixel_t));
+  }
 
   /* Reading */
   for(i=0; i < rows; i++) {
