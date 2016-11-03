@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include "Util.h"
 #include "pixel.h"
 
@@ -20,6 +22,7 @@ int assign_cluster(pixel_t p, pixel_t *centers, int num_clusters) {
 
 
 int main(int argc, char* argv[]) {
+  srand(getpid());
   FILE* ifp;
   pixel_t *pixels;
   int ich1, ich2, rows, cols, bitcols, maxval=255, is_raw;
@@ -34,23 +37,26 @@ int main(int argc, char* argv[]) {
     exit(0);
   }
 
-  // num_clusters = atoi(argv[2]);
-  num_clusters = 3;
+  num_clusters = atoi(argv[2]);
+  if (num_clusters <= 0) {
+    printf("num clusters must be > 0\n");
+    exit(0);
+  }
   pixel_t *centers = malloc(num_clusters * sizeof(pixel_t));
   pixel_t **clusters;
 
-  // hand-picked centers
-  centers[0].red = 255;
-  centers[0].green = 105;
-  centers[0].blue = 208;
-
-  centers[1].red = 211;
-  centers[1].green = 219;
-  centers[1].blue = 22;
-
-  centers[2].red = 0;
-  centers[2].green = 0;
-  centers[2].blue = 0;
+  // // hand-picked centers
+  // centers[0].red = 255;
+  // centers[0].green = 105;
+  // centers[0].blue = 208;
+  //
+  // centers[1].red = 211;
+  // centers[1].green = 219;
+  // centers[1].blue = 22;
+  //
+  // centers[2].red = 0;
+  // centers[2].green = 0;
+  // centers[2].blue = 0;
 
   /* Opening */
   ifp = fopen(argv[1],"r");
@@ -88,7 +94,12 @@ int main(int argc, char* argv[]) {
   }
   cluster_size= malloc(num_clusters * sizeof(int) );
 
-
+  // randomize centers
+  for (i = 0; i < num_clusters; i++) {
+    centers[i].red = rand() % (maxval + 1);
+    centers[i].green = rand() % (maxval + 1);
+    centers[i].blue = rand() % (maxval + 1);
+  }
 
   /* Reading */
   for(i=0; i < rows; i++) {
@@ -125,7 +136,7 @@ int main(int argc, char* argv[]) {
 
     //Find the new center
     for (i=0; i< num_clusters ; i++){
-      int red,blue,green;
+      int red = 0, blue = 0, green = 0;
       pixel_t mean;
 
       for(j=0; j< cluster_size[i];j++) {
