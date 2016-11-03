@@ -6,4 +6,4 @@ typedef struct pixel {
   unsigned int y;
 } pixel_t;
 
-int distance(pixel_t p1, pixel_t p2);
+float distance(pixel_t p1, pixel_t p2);

@@ -1,16 +1,16 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <limits.h>
+#include <float.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include "Util.h"
 #include "pixel.h"
 
 int assign_cluster(pixel_t p, pixel_t *centers, int num_clusters) {
-  int min_dist = INT_MAX;
+  float min_dist = FLT_MAX;
   int cluster_id = -1;
   for (int i = 0; i < num_clusters; i++) {
-    int dist = distance(p, centers[i]);
+    float dist = distance(p, centers[i]);
     if (dist < min_dist) {
       min_dist = dist;
       cluster_id = i;
