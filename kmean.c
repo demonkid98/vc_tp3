@@ -1,8 +1,22 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
 #include "Util.h"
 #include "pixel.h"
 
+int assign_cluster(pixel_t p, pixel_t *centers, int num_clusters) {
+  int min_dist = INT_MAX;
+  int cluster_id = -1;
+  for (int i = 0; i < num_clusters; i++) {
+    int dist = distance(p1, centers[i]);
+    if (dist < min_dist) {
+      min_dist = dist;
+      cluster_id = i;
+    }
+  }
+
+  return cluster_id;
+}
 
 
 int main(int argc, char* argv[]) {
