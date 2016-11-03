@@ -16,7 +16,7 @@ CFLAGS    =  -g -Wall
 CPPFLAGS  =  -DDEBUG
 LDFLAGS   =  -g -lm
 
-kmean: kmean.o Util.o
+kmean: kmean.o Util.o pixel.o
 
 clean :
 	@rm -f *.o
