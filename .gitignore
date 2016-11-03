@@ -4,5 +4,5 @@ report/*.pdf
 report/*.synctex.gz
 .DS_STORE
 *.o
-*.out.pgm
+*.out.*
 kmean

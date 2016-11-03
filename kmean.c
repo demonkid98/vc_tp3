@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
     clusters[i] = malloc(rows * cols * sizeof(pixel_t));
   }
   cluster_size= malloc(num_clusters * sizeof(int) );
-  
+
 
 
   /* Reading */
@@ -155,46 +155,28 @@ green /= cluster_size[i];
 
 
 }
+  for (i = 0; i < num_clusters; i++) {
+    for (j = 0; j < cluster_size[i]; j++) {
+      int x = clusters[i][j].x;
+      int y = clusters[i][j].y;
 
-// for (i= 0; i< rows ; i++)
-// {
-//   for (j = 0; i < cols; ++i)
-//   {
-//     out [i *bitcols + j]= 
-//   }
-
-//   printf("%d\n",centers[i].red );
-//   printf("%d\n",centers[i].blue );
-//   printf("%d\n",centers[i].green );
-// }
-
-
-  // for (i = 0; i < rows; i++) {
-  //   for (j = 0; j < cols; j++) {
-  //     printf("r:%d g:%d b:%d --- x:%d y:%d\n",
-  //       pixels[i * cols + j].red,
-  //       pixels[i * cols + j].green,
-  //       pixels[i * cols + j].blue,
-  //       pixels[i * cols + j].x,
-  //       pixels[i * cols + j].y);
-  //   }
-  // }
+      out[x * bitcols + y * 3] = centers[i].red;
+      out[x * bitcols + y * 3 + 1] = centers[i].green;
+      out[x * bitcols + y * 3 + 2] = centers[i].blue;
+    }
+  }
 
   /* Writing */
-  // fprintf(ofp_gray, "P5\n");
-  //
-  // fprintf(ofp_gray, "%d %d \n", cols, rows);
-  // fprintf(ofp_gray, "%d\n",maxval);
-  //
-  // for (i = 0; i < rows; i++) {
-  //   for (j = 0; j < bitcols; j++) {
-  //     if (j % 3 == 0) {
-  //       int coordinate = i * bitcols + j;
-  //       char intensity = (char) (((int) colormap[coordinate] + (int) colormap[coordinate + 1] + (int) colormap[coordinate + 2]) / 3);
-  //       fprintf(ofp_gray, "%c", intensity);
-  //     }
-  //   }
-  // }
+  printf("P6\n");
+
+  printf("%d %d \n", cols, rows);
+  printf("%d\n", maxval);
+
+  for (i = 0; i < rows; i++) {
+    for (j = 0; j < bitcols; j++) {
+      printf("%c", out[i * bitcols + j]);
+    }
+  }
 
 
   /* Closing */
