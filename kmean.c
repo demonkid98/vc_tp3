@@ -95,6 +95,7 @@ int main(int argc, char* argv[]) {
       } else {
         pixel.red = pm_getint(ifp);
         pixel.green = pm_getint(ifp);
+        pixel.blue = pm_getint(ifp);
       }
       pixel.x = i;
       pixel.y = j;
