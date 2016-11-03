@@ -8,7 +8,7 @@ int assign_cluster(pixel_t p, pixel_t *centers, int num_clusters) {
   int min_dist = INT_MAX;
   int cluster_id = -1;
   for (int i = 0; i < num_clusters; i++) {
-    int dist = distance(p1, centers[i]);
+    int dist = distance(p, centers[i]);
     if (dist < min_dist) {
       min_dist = dist;
       cluster_id = i;
@@ -25,6 +25,8 @@ int main(int argc, char* argv[]) {
   int ich1, ich2, rows, cols, bitcols, maxval=255, is_raw;
   int num_clusters;
   int i, j;
+  int *cluster_size;
+  unsigned char *out;
 
   /* Arguments */
   if ( argc != 3 ){
@@ -78,11 +80,15 @@ int main(int argc, char* argv[]) {
   maxval = pm_getint( ifp );
 
   /* Memory allocation  */
+  out = malloc (bitcols * rows *sizeof(unsigned char));
   pixels = malloc(cols * rows * sizeof(pixel_t));
   clusters = malloc(num_clusters * sizeof(pixel_t *));
   for (i = 0; i < num_clusters; i++) {
     clusters[i] = malloc(rows * cols * sizeof(pixel_t));
   }
+  cluster_size= malloc(num_clusters * sizeof(int) );
+  
+
 
   /* Reading */
   for(i=0; i < rows; i++) {
@@ -102,16 +108,76 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  for (i = 0; i < rows; i++) {
-    for (j = 0; j < cols; j++) {
-      printf("r:%d g:%d b:%d --- x:%d y:%d\n",
-        pixels[i * cols + j].red,
-        pixels[i * cols + j].green,
-        pixels[i * cols + j].blue,
-        pixels[i * cols + j].x,
-        pixels[i * cols + j].y);
-    }
-  }
+
+
+
+for (int z=0;z<10;z++)
+{
+
+for(i=0;i<num_clusters;i++)
+    cluster_size[i]=0;
+
+  // Assing point to cluster
+
+for(i= 0;i < rows* cols;i++){
+
+ int id= assign_cluster(pixels[i],centers, num_clusters);
+ int current_size=cluster_size[id];
+ clusters[id][current_size] = pixels[i];
+ cluster_size[id]++;
+
+}
+
+//Find the new center
+
+for (i=0; i< num_clusters ; i++){
+  int red,blue,green;
+  pixel_t mean;
+
+for(j=0; j< cluster_size[i];j++)
+{
+  red+= clusters[i][j].red;
+  blue+= clusters[i][j].blue;
+  green+= clusters[i][j].green;
+}
+
+red /= cluster_size[i];
+blue /= cluster_size[i];
+green /= cluster_size[i];
+
+  mean.red = red;
+  mean.blue = blue;
+  mean.green = green;
+
+  centers[i]=mean;
+}
+
+
+}
+
+// for (i= 0; i< rows ; i++)
+// {
+//   for (j = 0; i < cols; ++i)
+//   {
+//     out [i *bitcols + j]= 
+//   }
+
+//   printf("%d\n",centers[i].red );
+//   printf("%d\n",centers[i].blue );
+//   printf("%d\n",centers[i].green );
+// }
+
+
+  // for (i = 0; i < rows; i++) {
+  //   for (j = 0; j < cols; j++) {
+  //     printf("r:%d g:%d b:%d --- x:%d y:%d\n",
+  //       pixels[i * cols + j].red,
+  //       pixels[i * cols + j].green,
+  //       pixels[i * cols + j].blue,
+  //       pixels[i * cols + j].x,
+  //       pixels[i * cols + j].y);
+  //   }
+  // }
 
   /* Writing */
   // fprintf(ofp_gray, "P5\n");
