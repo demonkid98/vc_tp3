@@ -138,8 +138,10 @@ int main(int argc, char* argv[]) {
 
     //Find the new center
     for (i=0; i< num_clusters ; i++){
+      if (cluster_size[i] == 0) {
+        continue;
+      }
       int red = 0, blue = 0, green = 0, x = 0, y = 0;
-      pixel_t mean;
 
       for(j=0; j< cluster_size[i];j++) {
         red+= clusters[i][j].red;
@@ -153,13 +155,7 @@ int main(int argc, char* argv[]) {
       x /= cluster_size[i];
       y /= cluster_size[i];
 
-      mean.red = red;
-      mean.blue = blue;
-      mean.green = green;
-      mean.x = x;
-      mean.y = y;
-
-      centers[i]=mean;
+      centers[i]=(pixel_t) {red, green, blue, x, y};
     }
   }
 
